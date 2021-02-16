@@ -18,13 +18,13 @@ print(A)
 print(A.sum(axis=0))
 # d is degree of system
 d = max(A.sum(axis=0))
-print(d)
+print("degree: ", d)
 
 def isDangerous(S, nV_t, d):
     # S is a 1 x n row representing a set
     # V_t are the current NON fixed variables
     # d is the degree of the system
-    return S[nV_t].sum() > d - 1
+    return S[nV_t].sum() > d
 
 #!/usr/bin/env python3.7
 
@@ -33,20 +33,24 @@ from gurobipy import GRB
 from gurobipy import quicksum
 if __name__ == "__main__":
 
-
-    try:
-
+    max_iters = 2
+    t = 0
+    while np.sum(np.abs(x)) < n and t < max_iters:
         # Create a new model
         model = gp.Model("beckFiala")
+        print("current colouring: ", x)    
+        model.params.LogToConsole = 0
         model.params.NonConvex = 2
-        # test = model.addVar(vtype=GRB.BINARY, name="x")
-        # model.addConstr(test - 1, "test")        
-
 
         # represents delta_x
         variables = []
         for i in range(n):
-            variables.append(model.addVar(lb=-100, ub =100, vtype=GRB.CONTINUOUS, name="x"+str(i)))
+            if (abs(x[i]) < 1):
+                variables.append(model.addVar(lb=-100, ub =100, vtype=GRB.CONTINUOUS, name="x"+str(i)))
+            else:
+                variables.append(x[i])
+        
+        # print(variables)
         # variables[0].start = 1
         # variables[0].start = -1
         # for i in range(n):
@@ -59,17 +63,19 @@ if __name__ == "__main__":
         # print("check")
 
         for i in range(m):
-            print(i)
             if isDangerous(A[i , :], np.argwhere(abs(x) < 1),d):
                 print(A[i, :], " is dangerous")
                 nonfixed =  [variables[j] for j in range(n) if abs(x[j]) < 1 and A[i, j] == 1]
-                print(len(nonfixed))
+                # print(len(nonfixed))
                 model.addConstr(quicksum(nonfixed) == 0, "D" + str(i))        
                 # model.addConstr(quicksum(nonfixed) <= 0.001, "+D" + str(i))        
                 # model.addConstr(quicksum(nonfixed) >= -0.001, "-D" + str(i))        
 
 
+        # model.printStats()
         # Set objective
+
+
         model.setObjective(quicksum([v * v for v in variables]), GRB.MAXIMIZE)
 
         # m.setParam("SolFiles", "test");
@@ -81,26 +87,45 @@ if __name__ == "__main__":
         model.write("out.sol")
 
 
-        soln = np.array([v.x for v in model.getVars()])
-        print(soln)
+        soln = np.zeros(n);
+        for v in model.getVars():
+            index = int(v.varName[-1])
+            print(index)
+            soln[index] = v.x
 
+            # print((v.varName)[-1])
+            # print('%s %g' % (v.varName, v.x))
+
+
+
+
+        # soln = np.array([v.x for v in model.getVars()])
+        # print(soln)
+        
         soln = soln / np.amax(np.abs(soln))
 
-        print(soln)
+        nonfixedindices = np.argwhere(abs(x) < 1)
+        nonfixedindices = np.reshape(nonfixedindices, nonfixedindices.shape[0])
 
-        x += soln 
-        # for v in model.getVars():
-        #     print('%s %g' % (v.varName, v.x))
+        print(nonfixedindices)
+        limit = np.zeros((n, 1))
 
-        # print('Obj: %g' % model.objVal)
+        for k in nonfixedindices:
+            limit[k] = abs(x[k] + soln[k])
 
-    except gp.GurobiError as e:
-        print('Error code ' + str(e.errno) + ': ' + str(e))
+        # limit[nonfixedindices] = np.abs(x + soln)[nonfixedindices]
+        # limit[nonfixedindices] = test
 
-    except AttributeError:
-        print('Encountered an attribute error')
+        # limit = np.array(np.abs(x + soln)[nonfixedindices])
+        # limit = np.array([np.abs(x + soln)[i] for i in range(n) if abs(x[i]) < 1 else 0])
 
+        print("limit: \n", limit)
+        # q = np.argmax(np.abs(x + soln))
+        q = np.argmax(limit)
+        x += abs(((1 - x[q]) / soln[q])) * soln
+        t += 1
 
+    print("final colouring: ", x)
 
 
 
