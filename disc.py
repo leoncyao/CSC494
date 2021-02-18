@@ -44,5 +44,5 @@ def genbin(n, bs = ''):
             # disc += abs(coloring[decode(edge[0])] + coloring[decode(edge[1])] + coloring[decode(edge[2])] + coloring[decode(edge[3])])
         # print(disc)
         if disc == 0:
-            print(coloring) Z
+            print(coloring) 
 genbin(9)

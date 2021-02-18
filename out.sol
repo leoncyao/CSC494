@@ -1,3 +1,3 @@
 # Solution for model beckFiala
-# Objective value = 10004
-x2 -100
+# Objective value = 10014
+x7 -100
