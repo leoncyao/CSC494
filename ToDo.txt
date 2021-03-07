@@ -1,0 +1,10 @@
+Debug subroutine
+
+Debug beckfiala for normal set systems
+
+make beckfiala for general matrices
+
+implement randomized choosing for delta and gamma
+
+think of ways to make program run faster, use numpy to solve linear system? couldn't find way to
+gurantee non zero solution when using numpy.linalg.solve
