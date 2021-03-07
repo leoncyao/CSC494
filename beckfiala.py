@@ -8,19 +8,20 @@ m = 5 # number of sets
 # np.random.permutation()
 # A = np.array([[1, 0, 1, 1, 0], [0, 0, 1, 0, 1], [0, 0, 0, 1, 1]])
 # A = np.random.randint(0,2,(m, n))
+# A = np.random.rand(0,2,(m, n))
+A = np.around(np.random.rand(m, n), decimals=1)
 
-
-B = "1 1 1 0 0 1 1 0 0 0 1 0 1 0 1 0 0 0 0 0 1 0 1][1 0 0 0 1 1 0 1 1 0 0 1 1 0 1 0 0 0 1 0 0 0 1][1 0 0 0 1 1 0 0 0 0 0 0 1 0 1 1 0 1 1 1 1 1 0][1 1 1 0 1 1 1 0 0 1 0 0 0 1 0 1 1 1 1 0 0 1 1][1 0 0 0 0 1 0 0 1 0 1 1 0 0 1 0 0 1 0 1 0 0 0".split("][")
-C = []
+# B = "1 1 1 0 0 1 1 0 0 0 1 0 1 0 1 0 0 0 0 0 1 0 1][1 0 0 0 1 1 0 1 1 0 0 1 1 0 1 0 0 0 1 0 0 0 1][1 0 0 0 1 1 0 0 0 0 0 0 1 0 1 1 0 1 1 1 1 1 0][1 1 1 0 1 1 1 0 0 1 0 0 0 1 0 1 1 1 1 0 0 1 1][1 0 0 0 0 1 0 0 1 0 1 1 0 0 1 0 0 1 0 1 0 0 0".split("][")
+# C = []
 # print(B)
-for row in B:
+# for row in B:
     # print(row)
-    C.append(list(map(int, row.split(" "))))
+    # C.append(list(map(int, row.split(" "))))
 # print(C)
 
 w = 0.5
 # A = np.random.choice(2, (m, n), p=[w, 1 - w])
-A = np.array(C)
+# A = np.array(C)
 m = A.shape[0]
 
 x = np.zeros(n)
@@ -114,11 +115,13 @@ if __name__ == "__main__":
         # soln is delta_x, to figure 
 
         q = np.argmax(limit)
-        Lambda = abs(((1 - x[q]) / soln[q]))
+        # Lambda = abs(((1 - x[q]) / soln[q]))
+        Lambda = min(abs(((1 - x[q]) / soln[q])), abs(((x[q] + 1) / soln[q])))
         print("q: {}, x[{}]: {}, soln[{}] {}".format(q, q, x[q], q, soln[q]))
 
         print("lambda: ", Lambda)
-        x += abs(((1 - x[q]) / soln[q])) * soln
+        # x += abs(((1 - x[q]) / soln[q])) * soln
+        x += Lambda * soln
         t += 1
 
     # print("final colouring: ", list(map(round, x)))

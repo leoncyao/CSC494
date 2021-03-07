@@ -2,7 +2,7 @@
 import numpy as np
 
 # n = 2 # size of base set
-n = 23
+n = 10
 m = 5 # number of sets
 
 # np.random.permutation()
@@ -10,24 +10,24 @@ m = 5 # number of sets
 # A = np.random.randint(0,2,(m, n))
 
 
-B = "1 1 1 0 0 1 1 0 0 0 1 0 1 0 1 0 0 0 0 0 1 0 1][1 0 0 0 1 1 0 1 1 0 0 1 1 0 1 0 0 0 1 0 0 0 1][1 0 0 0 1 1 0 0 0 0 0 0 1 0 1 1 0 1 1 1 1 1 0][1 1 1 0 1 1 1 0 0 1 0 0 0 1 0 1 1 1 1 0 0 1 1][1 0 0 0 0 1 0 0 1 0 1 1 0 0 1 0 0 1 0 1 0 0 0".split("][")
-C = []
-# print(B)
-for row in B:
-    # print(row)
-    C.append(list(map(int, row.split(" "))))
+# B = "1 1 1 0 0 1 1 0 0 0 1 0 1 0 1 0 0 0 0 0 1 0 1][1 0 0 0 1 1 0 1 1 0 0 1 1 0 1 0 0 0 1 0 0 0 1][1 0 0 0 1 1 0 0 0 0 0 0 1 0 1 1 0 1 1 1 1 1 0][1 1 1 0 1 1 1 0 0 1 0 0 0 1 0 1 1 1 1 0 0 1 1][1 0 0 0 0 1 0 0 1 0 1 1 0 0 1 0 0 1 0 1 0 0 0".split("][")
+# C = []
+# # print(B)
+# for row in B:
+#     # print(row)
+#     C.append(list(map(int, row.split(" "))))
 # print(C)
 
 prob = 0.5
-# A = np.random.choice(2, (m, n), p=[prob, 1 - prob])
-A = np.array(C)
+A = np.random.choice(2, (m, n), p=[prob, 1 - prob])
+# A = np.array(C)
 m = A.shape[0]
 
 
 # weight function
 
 # w = np.around(np.random.rand(A.shape[1]), decimals=2)
-w = np.around(np.random.uniform(low=-1, high=1, size=A.shape[1]), decimals=2)
+w = np.around(np.random.uniform(low=-1, high=1, size=A.shape[1]), decimals=1)
 
 
 x = w
@@ -108,7 +108,7 @@ if __name__ == "__main__":
             print(index)
         
         # print(soln)
-        soln = soln / np.amax(np.abs(soln))
+        # soln = soln / np.amax(np.abs(soln))
 
         # print("dx: ", list(map(round, soln)))
         print("dx: ", soln)
@@ -133,6 +133,16 @@ if __name__ == "__main__":
         print("q: {}, x[{}]: {}, soln[{}] {}".format(q, q, x[q], q, soln[q]))
 
         print("lambda: ", Lambda)
+
+
+        # print out first sets sum
+        asdf = 0
+        row_index = 1
+        for i in range(n):
+            if A[row_index, i] == 1:
+                asdf += x[i]
+        print("t: w(row_index)", asdf)
+
         # x += abs(((1 - x[q]) / soln[q])) * soln
         x += Lambda * soln
         t += 1
