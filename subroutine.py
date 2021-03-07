@@ -133,7 +133,8 @@ if __name__ == "__main__":
         print("q: {}, x[{}]: {}, soln[{}] {}".format(q, q, x[q], q, soln[q]))
 
         print("lambda: ", Lambda)
-        x += abs(((1 - x[q]) / soln[q])) * soln
+        # x += abs(((1 - x[q]) / soln[q])) * soln
+        x += Lambda * soln
         t += 1
 
     # print("final colouring: ", list(map(round, x)))
