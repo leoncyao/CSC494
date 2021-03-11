@@ -117,6 +117,27 @@ if __name__ == "__main__":
         q = np.argmax(limit)
         # Lambda = abs(((1 - x[q]) / soln[q]))
         Lambda = min(abs(((1 - x[q]) / soln[q])), abs(((x[q] + 1) / soln[q])))
+
+        randomized = False
+        if randomized:
+            nonfixedindices = np.argwhere(abs(x) < 1)
+            nonfixedindices = np.reshape(nonfixedindices, nonfixedindices.shape[0])
+
+            limit = np.zeros((n, 1))
+
+            # goes the other way
+            for k in nonfixedindices:
+                limit[k] = abs(x[k] - soln[k])
+
+            # soln is delta_x, to figure 
+
+            q = np.argmax(limit)
+            # Lambda = abs(((1 - x[q]) / soln[q]))
+            Lambda2 = min(abs(((1 - x[q]) / soln[q])), abs(((x[q] + 1) / soln[q])))
+
+            # should pick lambda with probability p = -lambda2 / (lambda1 - lambda2) to keep
+            # expection of x(t+1) the same
+
         print("q: {}, x[{}]: {}, soln[{}] {}".format(q, q, x[q], q, soln[q]))
 
         print("lambda: ", Lambda)
