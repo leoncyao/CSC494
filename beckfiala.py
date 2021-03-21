@@ -115,10 +115,11 @@ if __name__ == "__main__":
         # soln is delta_x, to figure 
 
         q = np.argmax(limit)
+        print("q1: ", q)
         # Lambda = abs(((1 - x[q]) / soln[q]))
-        Lambda = min(abs(((1 - x[q]) / soln[q])), abs(((x[q] + 1) / soln[q])))
+        Lambda1 = min(abs(((1 - x[q]) / soln[q])), abs(((x[q] + 1) / soln[q])))
 
-        randomized = False
+        randomized = True
         if randomized:
             nonfixedindices = np.argwhere(abs(x) < 1)
             nonfixedindices = np.reshape(nonfixedindices, nonfixedindices.shape[0])
@@ -132,15 +133,21 @@ if __name__ == "__main__":
             # soln is delta_x, to figure 
 
             q = np.argmax(limit)
+
+            print("q2: ",q )
             # Lambda = abs(((1 - x[q]) / soln[q]))
-            Lambda2 = min(abs(((1 - x[q]) / soln[q])), abs(((x[q] + 1) / soln[q])))
+            Lambda2 = -min(abs(((1 - x[q]) / soln[q])), abs(((x[q] + 1) / soln[q])))
 
             # should pick lambda with probability p = -lambda2 / (lambda1 - lambda2) to keep
             # expection of x(t+1) the same
+            print("q: {}, x[{}]: {}, soln[{}] {}".format(q, q, x[q], q, soln[q]))
+            prob = -Lambda2 / (Lambda1 - Lambda2)
+            print(prob)
+            Lambda = np.random.choice([Lambda1, Lambda2], 1, p=[-Lambda2 / (Lambda1 - Lambda2), 1 - (-Lambda2 / (Lambda1 - Lambda2))])
+        else:
+            Lambda = Lambda1
 
-        print("q: {}, x[{}]: {}, soln[{}] {}".format(q, q, x[q], q, soln[q]))
-
-        print("lambda: ", Lambda)
+        # print("lambda: ", Lambda)
         # x += abs(((1 - x[q]) / soln[q])) * soln
         x += Lambda * soln
         t += 1
