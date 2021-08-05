@@ -167,7 +167,7 @@ if __name__ == "__main__":
             # Lambda = abs(((1 - x[q]) / soln[q]))
             Lambda1 = min(abs(((1 - x[q]) / soln[q])), abs(((x[q] + 1) / soln[q])))
 
-            randomized = True
+            randomized = sys.argv[1] == "random"
             if randomized:
                 nonfixedindices = np.argwhere(abs(x) < 1)
                 nonfixedindices = np.reshape(nonfixedindices, nonfixedindices.shape[0])
